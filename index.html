@@ -14,12 +14,96 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css?family=Abril+Fatface|Lato|Staatliches&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://kit.fontawesome.com/1469ef8650.js"></script>
     <title>Recipe Explorer</title>
   </head>
   <body>
-    <!--3 inputs are Search by Name, Search by Category, Search by Ingredient-->
-    <!--Meal categories for dropdown:
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+      <div class="container-fluid mx-5">
+        <a class="navbar-brand" href="#"
+          ><i class="fas fa-pepper-hot"></i> Recipe Explorer</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#"
+                >Home <span class="sr-only">(current)</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <nav
+      class="navbar navbar-expand-lg navbar-light justify-content-center secondbar"
+    >
+      <h3>Dinner? Easy.</h3>
+    </nav>
+    <div class="container-fluid">
+      <div class="row mt-3">
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+          <div class="search-container">
+            <form>
+              <div class="form-group">
+                <label for="name">Search by Name</label>
+                <input class="form-control" type="text" id="name-input" />
+              </div>
+              <div class="form-group">
+                <label for="destination">Search by Ingredient</label>
+                <input class="form-control" type="text" id="ingredient-input" />
+              </div>
+              <div class="form-group">
+                <label for="category">Search by Category</label>
+                <select class="form-control" id="category-input">
+                  <option>Vegetarian</option>
+                  <option>Vegan</option>
+                  <option>Starter</option>
+                  <option>Side</option>
+                  <option>Dessert</option>
+                  <option>Seafood</option>
+                  <option>Beef</option>
+                  <option>Pork</option>
+                  <option>Lamb</option>
+                  <option>Chicken</option>
+                  <option>Pasta</option>
+                  <option>Miscellaneous</option>
+                </select>
+              </div>
+            </form>
+            <div class="btn-container">
+              <button class="btn btn-secondary" id="search-btn">
+                Search
+              </button>
+              <button class="btn btn-secondary" id="random-btn">
+                Random!
+              </button>
+            </div>
+          </div>
+          <!--3 inputs are Search by Name, Search by Category, Search by Ingredient-->
+          <!--Meal categories for dropdown:
       vegetarian
       vegan
       starter
@@ -34,6 +118,118 @@
       dessert
       chicken
     -->
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-1"></div>
+        <div class="col-md-7">
+          <div class="main-content">
+            <div class="recipe-image">
+              <div class="recipe-title">
+                <h2>Teriyaki Chicken Casserole</h2>
+              </div>
+            </div>
+
+            <div class="ingredients-container">
+              <h4>Ingredients</h4>
+              <ul id="ingredients-list">
+                <li>3/4 cup soy sauce</li>
+                <li>1/2 cup water</li>
+                <li>1/4 cup brown sugar</li>
+                <li>1/2 teaspoon ground ginger</li>
+                <li>2 teaspoons minced garlic</li>
+                <li>4 Tablespoons cornstarch</li>
+                <li>2 chicken breasts</li>
+                <li>1 (12 oz) package stir-fry vegetables</li>
+                <li>3 cups brown rice</li>
+              </ul>
+            </div>
+            <div class="directions-container">
+              <h4>Directions</h4>
+              <span id="directions"
+                >Preheat oven to 350° F. Spray a 9x13-inch baking pan with
+                non-stick spray.<br /><br />Combine soy sauce, ½ cup water,
+                brown sugar, ginger and garlic in a small saucepan and cover.
+                Bring to a boil over medium heat. Remove lid and cook for one
+                minute once boiling.<br /><br />Meanwhile, stir together the
+                corn starch and 2 tablespoons of water in a separate dish until
+                smooth. Once sauce is boiling, add mixture to the saucepan and
+                stir to combine. Cook until the sauce starts to thicken then
+                remove from heat.<br /><br />Place the chicken breasts in the
+                prepared pan. Pour one cup of the sauce over top of chicken.
+                Place chicken in oven and bake 35 minutes or until cooked
+                through. Remove from oven and shred chicken in the dish using
+                two forks.<br /><br />*Meanwhile, steam or cook the vegetables
+                according to package directions.<br /><br />Add the cooked
+                vegetables and rice to the casserole dish with the chicken. Add
+                most of the remaining sauce, reserving a bit to drizzle over the
+                top when serving. Gently toss everything together in the
+                casserole dish until combined. Return to oven and cook 15
+                minutes. Remove from oven and let stand 5 minutes before
+                serving. Drizzle each serving with remaining sauce. Enjoy!</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="nutrition-content">
+            <h5>Nutrition Facts</h5>
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">Calories</th>
+                  <td id="cal">#</td>
+                  <td id="calper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Total Fat</th>
+                  <td id="fat">g</td>
+                  <td id="fatper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Saturated Fat</th>
+                  <td id="satfat">g</td>
+                  <td id="satfatper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cholesterol</th>
+                  <td id="chol">mg</td>
+                  <td id="cholper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Sodium</th>
+                  <td id="sodium">mg</td>
+                  <td id="sodiumper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Total Carbohydrates</th>
+                  <td id="carb">g</td>
+                  <td id="carbper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Dietary Fiber</th>
+                  <td id="fiber">g</td>
+                  <td id="fiberper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Sugar</th>
+                  <td id="sugar">g</td>
+                  <td id="sugarper">%</td>
+                </tr>
+                <tr>
+                  <th scope="row">Protein</th>
+                  <td id="protein">g</td>
+                  <td id="proteinper">%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+      </div>
+    </div>
+    <footer></footer>
+
     <script
       src="https://code.jquery.com/jquery-3.0.0.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
