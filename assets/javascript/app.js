@@ -1,24 +1,5 @@
-/*function buildQueryURL() {
-  var titleKeyword = 
-
-  var ingredientKeyword =
-    "i=" +
-    $("#ingredient-input")
-      .val()
-      .trim();
-
-
-
-  var queryURL =
-    "https://www.themealdb.com/api/json/v1/1/filter.php?" +
-    ingredientKeyword +
-    "&&" +
-    category;
-  console.log(queryURL);
-  return queryURL;
-}*/
-
 var mealID = "";
+var recipe;
 
 $("#search-btn-ingredient").on("click", function() {
   var ingredientKeyword =
@@ -97,18 +78,160 @@ $("#search-btn-ingredient").on("click", function() {
       $("#title").empty();
       $("#ingredients-list").empty();
       $("#directions").empty();
+      $("#cal").empty();
+      $("#fat").empty();
+      $("#satfat").empty();
+      $("#chol").empty();
+      $("#sodium").empty();
+      $("#carb").empty();
+      $("#fiber").empty();
+      $("#sugar").empty();
+      $("#protein").empty();
 
       for (i = 0; i < measuresArray.length; i++) {
-        if (measuresArray[i] !== " ") {
+        if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
           $("#ingredients-list").append($("<li>" + measuresArray[i] + "</li>"));
         }
       }
+
+      recipe = {
+        title: title,
+        prep: "",
+        yield: 4,
+        ingr: measuresArray.filter(function(item) {
+          return item !== " ";
+        })
+      };
+
+      //Create the XHR object.
+      function createCORSRequest(method, url) {
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+          // XHR for Chrome/Firefox/Opera/Safari.
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // XDomainRequest for IE.
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      }
+      var app_id = "5e802351";
+      var app_key = "13bf29d458997ee7632f5d5a606996a3";
+      // Make the actual CORS request.
+      function makeCorsRequest() {
+        var url =
+          "https://api.edamam.com/api/nutrition-details?app_id=" +
+          app_id +
+          "&app_key=" +
+          app_key;
+        var xhr = createCORSRequest("POST", url);
+        if (!xhr) {
+          alert("CORS not supported");
+          return;
+        }
+        // Response handlers.
+        xhr.onload = function() {
+          console.log(JSON.parse(xhr.responseText));
+          var response = JSON.parse(xhr.responseText);
+
+          if (response.totalNutrients["ENERC_KCAL"]) {
+            $("#cal").text(
+              Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
+                " kcal"
+            );
+          } else {
+            $("#cal").text("0 kcal");
+          }
+
+          if (response.totalNutrients.FAT) {
+            $("#fat").text(
+              Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
+            );
+          } else {
+            $("#fat").text("0 g");
+          }
+
+          if (response.totalNutrients.FASAT) {
+            $("#satfat").text(
+              Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
+            );
+          } else {
+            $("#satfat").text("0 g");
+          }
+
+          if (response.totalNutrients.CHOLE) {
+            $("#chol").text(
+              Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
+            );
+          } else {
+            $("#chol").text("0 mg");
+          }
+
+          if (response.totalNutrients.NA) {
+            $("#sodium").text(
+              Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
+            );
+          } else {
+            $("#sodium").text("0 mg");
+          }
+
+          if (response.totalNutrients.CHOCDF) {
+            $("#carb").text(
+              Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
+            );
+          } else {
+            $("#carb").text("0 g");
+          }
+
+          if (response.totalNutrients.FIBTG) {
+            $("#fiber").text(
+              Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
+            );
+          } else {
+            $("#fiber").text("0 g");
+          }
+
+          if (response.totalNutrients.SUGAR) {
+            $("#sugar").text(
+              Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
+            );
+          } else {
+            $("#sugar").text("0 g");
+          }
+
+          if (response.totalNutrients.PROCNT) {
+            $("#protein").text(
+              Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
+            );
+          } else {
+            $("#protein").text("0 g");
+          }
+        };
+
+        xhr.onerror = function() {
+          alert("Woops, there was an error making the request.");
+        };
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(recipe));
+      }
+
+      makeCorsRequest();
 
       // Empty the contents of the artist-div, append the new artist content
 
       $("#title").text(title);
       $("#directions").text(directions);
-      $("#recipe-image").css("background", "url(" + imageURL + ")");
+      $("#recipe-image").css({
+        background: "url(" + imageURL + ")",
+        "background-position": "center",
+        "background-repeat": "no-repeat",
+        "background-size": "cover"
+      });
     });
   });
 });
@@ -186,18 +309,160 @@ $("#search-btn-category").on("click", function() {
       $("#title").empty();
       $("#ingredients-list").empty();
       $("#directions").empty();
+      $("#cal").empty();
+      $("#fat").empty();
+      $("#satfat").empty();
+      $("#chol").empty();
+      $("#sodium").empty();
+      $("#carb").empty();
+      $("#fiber").empty();
+      $("#sugar").empty();
+      $("#protein").empty();
 
       for (i = 0; i < measuresArray.length; i++) {
-        if (measuresArray[i] !== " ") {
+        if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
           $("#ingredients-list").append($("<li>" + measuresArray[i] + "</li>"));
         }
       }
+
+      recipe = {
+        title: title,
+        prep: "",
+        yield: 4,
+        ingr: measuresArray.filter(function(item) {
+          return item !== " ";
+        })
+      };
+
+      //Create the XHR object.
+      function createCORSRequest(method, url) {
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+          // XHR for Chrome/Firefox/Opera/Safari.
+          xhr.open(method, url, true);
+        } else if (typeof XDomainRequest != "undefined") {
+          // XDomainRequest for IE.
+          xhr = new XDomainRequest();
+          xhr.open(method, url);
+        } else {
+          // CORS not supported.
+          xhr = null;
+        }
+        return xhr;
+      }
+      var app_id = "5e802351";
+      var app_key = "13bf29d458997ee7632f5d5a606996a3";
+      // Make the actual CORS request.
+      function makeCorsRequest() {
+        var url =
+          "https://api.edamam.com/api/nutrition-details?app_id=" +
+          app_id +
+          "&app_key=" +
+          app_key;
+        var xhr = createCORSRequest("POST", url);
+        if (!xhr) {
+          alert("CORS not supported");
+          return;
+        }
+        // Response handlers.
+        xhr.onload = function() {
+          console.log(JSON.parse(xhr.responseText));
+          var response = JSON.parse(xhr.responseText);
+
+          if (response.totalNutrients["ENERC_KCAL"]) {
+            $("#cal").text(
+              Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
+                " kcal"
+            );
+          } else {
+            $("#cal").text("0 kcal");
+          }
+
+          if (response.totalNutrients.FAT) {
+            $("#fat").text(
+              Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
+            );
+          } else {
+            $("#fat").text("0 g");
+          }
+
+          if (response.totalNutrients.FASAT) {
+            $("#satfat").text(
+              Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
+            );
+          } else {
+            $("#satfat").text("0 g");
+          }
+
+          if (response.totalNutrients.CHOLE) {
+            $("#chol").text(
+              Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
+            );
+          } else {
+            $("#chol").text("0 mg");
+          }
+
+          if (response.totalNutrients.NA) {
+            $("#sodium").text(
+              Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
+            );
+          } else {
+            $("#sodium").text("0 mg");
+          }
+
+          if (response.totalNutrients.CHOCDF) {
+            $("#carb").text(
+              Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
+            );
+          } else {
+            $("#carb").text("0 g");
+          }
+
+          if (response.totalNutrients.FIBTG) {
+            $("#fiber").text(
+              Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
+            );
+          } else {
+            $("#fiber").text("0 g");
+          }
+
+          if (response.totalNutrients.SUGAR) {
+            $("#sugar").text(
+              Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
+            );
+          } else {
+            $("#sugar").text("0 g");
+          }
+
+          if (response.totalNutrients.PROCNT) {
+            $("#protein").text(
+              Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
+            );
+          } else {
+            $("#protein").text("0 g");
+          }
+        };
+
+        xhr.onerror = function() {
+          alert("Woops, there was an error making the request.");
+        };
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(recipe));
+      }
+
+      makeCorsRequest();
 
       // Empty the contents of the artist-div, append the new artist content
 
       $("#title").text(title);
       $("#directions").text(directions);
-      $("#recipe-image").css("background", "url(" + imageURL + ")");
+      $("#recipe-image").css({
+        background: "url(" + imageURL + ")",
+        "background-position": "center",
+        "background-repeat": "no-repeat",
+        "background-size": "cover"
+      });
     });
   });
 });
@@ -246,17 +511,159 @@ $("#random-btn").on("click", function() {
     $("#title").empty();
     $("#ingredients-list").empty();
     $("#directions").empty();
+    $("#cal").empty();
+    $("#fat").empty();
+    $("#satfat").empty();
+    $("#chol").empty();
+    $("#sodium").empty();
+    $("#carb").empty();
+    $("#fiber").empty();
+    $("#sugar").empty();
+    $("#protein").empty();
 
     for (i = 0; i < measuresArray.length; i++) {
-      if (measuresArray[i] !== " ") {
+      if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
         $("#ingredients-list").append($("<li>" + measuresArray[i] + "</li>"));
       }
     }
+
+    recipe = {
+      title: title,
+      prep: "",
+      yield: 4,
+      ingr: measuresArray.filter(function(item) {
+        return item !== " ";
+      })
+    };
+
+    //Create the XHR object.
+    function createCORSRequest(method, url) {
+      var xhr = new XMLHttpRequest();
+      if ("withCredentials" in xhr) {
+        // XHR for Chrome/Firefox/Opera/Safari.
+        xhr.open(method, url, true);
+      } else if (typeof XDomainRequest != "undefined") {
+        // XDomainRequest for IE.
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+      } else {
+        // CORS not supported.
+        xhr = null;
+      }
+      return xhr;
+    }
+    var app_id = "5e802351";
+    var app_key = "13bf29d458997ee7632f5d5a606996a3";
+    // Make the actual CORS request.
+    function makeCorsRequest() {
+      var url =
+        "https://api.edamam.com/api/nutrition-details?app_id=" +
+        app_id +
+        "&app_key=" +
+        app_key;
+      var xhr = createCORSRequest("POST", url);
+      if (!xhr) {
+        alert("CORS not supported");
+        return;
+      }
+      // Response handlers.
+      xhr.onload = function() {
+        console.log(JSON.parse(xhr.responseText));
+        var response = JSON.parse(xhr.responseText);
+
+        if (response.totalNutrients["ENERC_KCAL"]) {
+          $("#cal").text(
+            Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
+              " kcal"
+          );
+        } else {
+          $("#cal").text("0 kcal");
+        }
+
+        if (response.totalNutrients.FAT) {
+          $("#fat").text(
+            Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
+          );
+        } else {
+          $("#fat").text("0 g");
+        }
+
+        if (response.totalNutrients.FASAT) {
+          $("#satfat").text(
+            Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
+          );
+        } else {
+          $("#satfat").text("0 g");
+        }
+
+        if (response.totalNutrients.CHOLE) {
+          $("#chol").text(
+            Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
+          );
+        } else {
+          $("#chol").text("0 mg");
+        }
+
+        if (response.totalNutrients.NA) {
+          $("#sodium").text(
+            Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
+          );
+        } else {
+          $("#sodium").text("0 mg");
+        }
+
+        if (response.totalNutrients.CHOCDF) {
+          $("#carb").text(
+            Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
+          );
+        } else {
+          $("#carb").text("0 g");
+        }
+
+        if (response.totalNutrients.FIBTG) {
+          $("#fiber").text(
+            Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
+          );
+        } else {
+          $("#fiber").text("0 g");
+        }
+
+        if (response.totalNutrients.SUGAR) {
+          $("#sugar").text(
+            Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
+          );
+        } else {
+          $("#sugar").text("0 g");
+        }
+
+        if (response.totalNutrients.PROCNT) {
+          $("#protein").text(
+            Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
+          );
+        } else {
+          $("#protein").text("0 g");
+        }
+      };
+
+      xhr.onerror = function() {
+        alert("Woops, there was an error making the request.");
+      };
+
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(recipe));
+    }
+
+    makeCorsRequest();
 
     // Empty the contents of the artist-div, append the new artist content
 
     $("#title").text(title);
     $("#directions").text(directions);
-    $("#recipe-image").css("background", "url(" + imageURL + ")");
+    $("#recipe-image").css({
+      background: "url(" + imageURL + ")",
+      "background-position": "center",
+      "background-repeat": "no-repeat",
+      "background-size": "cover"
+    });
   });
 });
