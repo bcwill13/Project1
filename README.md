@@ -1,6 +1,7 @@
 # project-1: Recipe Generator
 
 Web application for viewing one random recipe at a time (can be limited by category or ingredient) along with nutritional content
+https://andreain3d.github.io/project-1/
 
 ##Technologies Used
 HTML 5
