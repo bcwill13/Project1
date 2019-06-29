@@ -35,7 +35,11 @@ h4 {
 }
 
 .btn {
-  margin: 0px 20px 0px;
+  margin-top: -10px;
+}
+
+#search-btn-category {
+  margin-bottom: 20px;
 }
 
 .main-content {
@@ -64,7 +68,7 @@ h2 {
   text-shadow: 2px 2px 2px #343a40;
 }
 
-.recipe-image {
+#recipe-image {
   background: url("https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg");
   height: 300px;
   border-top-left-radius: 2px;

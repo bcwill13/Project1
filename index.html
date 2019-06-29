@@ -68,16 +68,20 @@
           <div class="search-container">
             <form>
               <div class="form-group">
-                <label for="name">Search by Name</label>
-                <input class="form-control" type="text" id="name-input" />
-              </div>
-              <div class="form-group">
                 <label for="destination">Search by Ingredient</label>
                 <input class="form-control" type="text" id="ingredient-input" />
               </div>
+            </form>
+            <div class="btn-container">
+              <button class="btn btn-secondary" id="search-btn-ingredient">
+                Search
+              </button>
+            </div>
+            <form>
               <div class="form-group">
                 <label for="category">Search by Category</label>
                 <select class="form-control" id="category-input">
+                  <option></option>
                   <option>Vegetarian</option>
                   <option>Vegan</option>
                   <option>Starter</option>
@@ -94,10 +98,12 @@
               </div>
             </form>
             <div class="btn-container">
-              <button class="btn btn-secondary" id="search-btn">
+              <button class="btn btn-secondary" id="search-btn-category">
                 Search
               </button>
-              <button class="btn btn-secondary" id="random-btn">
+            </div>
+            <div class="btn-container">
+              <button class="btn btn-primary" id="random-btn">
                 Random!
               </button>
             </div>
@@ -124,9 +130,9 @@
         <div class="col-md-1"></div>
         <div class="col-md-7">
           <div class="main-content">
-            <div class="recipe-image">
+            <div id="recipe-image">
               <div class="recipe-title">
-                <h2>Teriyaki Chicken Casserole</h2>
+                <h2 id="title">Teriyaki Chicken Casserole</h2>
               </div>
             </div>
 
@@ -174,67 +180,63 @@
         <div class="col-md-3">
           <div class="nutrition-content">
             <h5>Nutrition Facts</h5>
+            <p>Serving size: 1/4 recipe</p>
             <table>
               <tbody>
                 <tr>
                   <th scope="row">Calories</th>
-                  <td id="cal">#</td>
-                  <td id="calper">%</td>
+                  <td id="cal"></td>
                 </tr>
                 <tr>
                   <th scope="row">Total Fat</th>
-                  <td id="fat">g</td>
-                  <td id="fatper">%</td>
+                  <td id="fat"></td>
                 </tr>
                 <tr>
                   <th scope="row">Saturated Fat</th>
-                  <td id="satfat">g</td>
-                  <td id="satfatper">%</td>
+                  <td id="satfat"></td>
                 </tr>
                 <tr>
                   <th scope="row">Cholesterol</th>
-                  <td id="chol">mg</td>
-                  <td id="cholper">%</td>
+                  <td id="chol"></td>
                 </tr>
                 <tr>
                   <th scope="row">Sodium</th>
-                  <td id="sodium">mg</td>
-                  <td id="sodiumper">%</td>
+                  <td id="sodium"></td>
                 </tr>
                 <tr>
                   <th scope="row">Total Carbohydrates</th>
-                  <td id="carb">g</td>
-                  <td id="carbper">%</td>
+                  <td id="carb"></td>
                 </tr>
                 <tr>
                   <th scope="row">Dietary Fiber</th>
-                  <td id="fiber">g</td>
-                  <td id="fiberper">%</td>
+                  <td id="fiber"></td>
                 </tr>
                 <tr>
                   <th scope="row">Sugar</th>
-                  <td id="sugar">g</td>
-                  <td id="sugarper">%</td>
+                  <td id="sugar"></td>
                 </tr>
                 <tr>
                   <th scope="row">Protein</th>
-                  <td id="protein">g</td>
-                  <td id="proteinper">%</td>
+                  <td id="protein"></td>
                 </tr>
               </tbody>
             </table>
+            <div id="chart-container">
+              <!--<canvas id="macroChart" width="400" height="400"></canvas>-->
+            </div>
           </div>
         </div>
         <div class="col-md-1"></div>
       </div>
     </div>
     <footer></footer>
-
     <script
-      src="https://code.jquery.com/jquery-3.0.0.min.js"
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
