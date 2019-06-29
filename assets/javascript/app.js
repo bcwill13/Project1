@@ -1,5 +1,78 @@
 var mealID = "";
 var recipe;
+var protein = 0;
+var carbs = 0;
+var fat = 0;
+
+var emptyInfo = function() {
+  $("#title").empty();
+  $("#ingredients-list").empty();
+  $("#directions").empty();
+  $("#cal").empty();
+  $("#fat").empty();
+  $("#satfat").empty();
+  $("#chol").empty();
+  $("#sodium").empty();
+  $("#carb").empty();
+  $("#fiber").empty();
+  $("#sugar").empty();
+  $("#protein").empty();
+  $("#chart-container").empty();
+};
+
+var infoNotAvailable = function() {
+  $("#cal").text("Not Available");
+  $("#protein").text("Not Available");
+  $("#carb").text("Not Available");
+  $("#fat").text("Not Available");
+  $("#satfat").text("Not Available");
+  $("#chol").text("Not Available");
+  $("#sodium").text("Not Available");
+  $("#fiber").text("Not Available");
+  $("#sugar").text("Not Available");
+};
+
+var printNutrients = function(nutrients, macro, id) {
+  var chartMacro = 0;
+  if (nutrients[macro]) {
+    if (macro === "PROCNT" || macro === "FAT" || macro === "CHOCDF") {
+      chartMacro = Math.round(nutrients[macro].quantity / 4);
+    }
+    $(`#${id}`).text(Math.round(nutrients[macro].quantity / 4) + " g");
+    return chartMacro;
+  } else {
+    $(`#${id}`).text("0 g");
+  }
+};
+
+var makeChart = function() {
+  var newCanvas = $("<canvas>").attr({
+    id: "macroChart",
+    height: "400px",
+    width: "400px"
+  });
+
+  $("#chart-container").append(newCanvas);
+  var ctx = document.getElementById("macroChart").getContext("2d");
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: "pie",
+
+    // The data for our dataset
+    data: {
+      labels: ["Protein", "Carbs", "Fat"],
+      datasets: [
+        {
+          data: [protein, carbs, fat],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"]
+        }
+      ]
+    },
+
+    // Configuration options go here
+    options: {}
+  });
+};
 
 $("#search-btn-ingredient").on("click", function() {
   var ingredientKeyword =
@@ -24,7 +97,6 @@ $("#search-btn-ingredient").on("click", function() {
       // Printing the entire object to console
       console.log(response);
 
-      // Constructing HTML containing the artist information
       var title = response.meals[0].strMeal;
       var directions = response.meals[0].strInstructions;
       var imageURL = response.meals[0].strMealThumb;
@@ -75,18 +147,7 @@ $("#search-btn-ingredient").on("click", function() {
       console.log(title);
       console.log(directions);
       console.log(measuresArray);
-      $("#title").empty();
-      $("#ingredients-list").empty();
-      $("#directions").empty();
-      $("#cal").empty();
-      $("#fat").empty();
-      $("#satfat").empty();
-      $("#chol").empty();
-      $("#sodium").empty();
-      $("#carb").empty();
-      $("#fiber").empty();
-      $("#sugar").empty();
-      $("#protein").empty();
+      emptyInfo();
 
       for (i = 0; i < measuresArray.length; i++) {
         if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
@@ -137,78 +198,24 @@ $("#search-btn-ingredient").on("click", function() {
         xhr.onload = function() {
           console.log(JSON.parse(xhr.responseText));
           var response = JSON.parse(xhr.responseText);
-
-          if (response.totalNutrients["ENERC_KCAL"]) {
-            $("#cal").text(
-              Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
-                " kcal"
+          console.log(response.totalNutrients);
+          if (response.totalNutrients !== undefined) {
+            protein = printNutrients(
+              response.totalNutrients,
+              "PROCNT",
+              "protein"
             );
+            carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
+            fat = printNutrients(response.totalNutrients, "FAT", "fat");
+            printNutrients(response.totalNutrients, "FASAT", "satfat");
+            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
+            printNutrients(response.totalNutrients, "CHOLE", "chol");
+            printNutrients(response.totalNutrients, "NA", "sodium");
+            printNutrients(response.totalNutrients, "FIBTG", "fiber");
+            printNutrients(response.totalNutrients, "SUGAR", "sugar");
+            makeChart();
           } else {
-            $("#cal").text("0 kcal");
-          }
-
-          if (response.totalNutrients.FAT) {
-            $("#fat").text(
-              Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
-            );
-          } else {
-            $("#fat").text("0 g");
-          }
-
-          if (response.totalNutrients.FASAT) {
-            $("#satfat").text(
-              Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
-            );
-          } else {
-            $("#satfat").text("0 g");
-          }
-
-          if (response.totalNutrients.CHOLE) {
-            $("#chol").text(
-              Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
-            );
-          } else {
-            $("#chol").text("0 mg");
-          }
-
-          if (response.totalNutrients.NA) {
-            $("#sodium").text(
-              Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
-            );
-          } else {
-            $("#sodium").text("0 mg");
-          }
-
-          if (response.totalNutrients.CHOCDF) {
-            $("#carb").text(
-              Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
-            );
-          } else {
-            $("#carb").text("0 g");
-          }
-
-          if (response.totalNutrients.FIBTG) {
-            $("#fiber").text(
-              Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
-            );
-          } else {
-            $("#fiber").text("0 g");
-          }
-
-          if (response.totalNutrients.SUGAR) {
-            $("#sugar").text(
-              Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
-            );
-          } else {
-            $("#sugar").text("0 g");
-          }
-
-          if (response.totalNutrients.PROCNT) {
-            $("#protein").text(
-              Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
-            );
-          } else {
-            $("#protein").text("0 g");
+            infoNotAvailable();
           }
         };
 
@@ -306,18 +313,7 @@ $("#search-btn-category").on("click", function() {
       console.log(title);
       console.log(directions);
       console.log(measuresArray);
-      $("#title").empty();
-      $("#ingredients-list").empty();
-      $("#directions").empty();
-      $("#cal").empty();
-      $("#fat").empty();
-      $("#satfat").empty();
-      $("#chol").empty();
-      $("#sodium").empty();
-      $("#carb").empty();
-      $("#fiber").empty();
-      $("#sugar").empty();
-      $("#protein").empty();
+      emptyInfo();
 
       for (i = 0; i < measuresArray.length; i++) {
         if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
@@ -369,77 +365,23 @@ $("#search-btn-category").on("click", function() {
           console.log(JSON.parse(xhr.responseText));
           var response = JSON.parse(xhr.responseText);
 
-          if (response.totalNutrients["ENERC_KCAL"]) {
-            $("#cal").text(
-              Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
-                " kcal"
+          if (response.totalNutrients !== undefined) {
+            protein = printNutrients(
+              response.totalNutrients,
+              "PROCNT",
+              "protein"
             );
+            carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
+            fat = printNutrients(response.totalNutrients, "FAT", "fat");
+            printNutrients(response.totalNutrients, "FASAT", "satfat");
+            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
+            printNutrients(response.totalNutrients, "CHOLE", "chol");
+            printNutrients(response.totalNutrients, "NA", "sodium");
+            printNutrients(response.totalNutrients, "FIBTG", "fiber");
+            printNutrients(response.totalNutrients, "SUGAR", "sugar");
+            makeChart();
           } else {
-            $("#cal").text("0 kcal");
-          }
-
-          if (response.totalNutrients.FAT) {
-            $("#fat").text(
-              Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
-            );
-          } else {
-            $("#fat").text("0 g");
-          }
-
-          if (response.totalNutrients.FASAT) {
-            $("#satfat").text(
-              Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
-            );
-          } else {
-            $("#satfat").text("0 g");
-          }
-
-          if (response.totalNutrients.CHOLE) {
-            $("#chol").text(
-              Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
-            );
-          } else {
-            $("#chol").text("0 mg");
-          }
-
-          if (response.totalNutrients.NA) {
-            $("#sodium").text(
-              Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
-            );
-          } else {
-            $("#sodium").text("0 mg");
-          }
-
-          if (response.totalNutrients.CHOCDF) {
-            $("#carb").text(
-              Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
-            );
-          } else {
-            $("#carb").text("0 g");
-          }
-
-          if (response.totalNutrients.FIBTG) {
-            $("#fiber").text(
-              Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
-            );
-          } else {
-            $("#fiber").text("0 g");
-          }
-
-          if (response.totalNutrients.SUGAR) {
-            $("#sugar").text(
-              Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
-            );
-          } else {
-            $("#sugar").text("0 g");
-          }
-
-          if (response.totalNutrients.PROCNT) {
-            $("#protein").text(
-              Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
-            );
-          } else {
-            $("#protein").text("0 g");
+            infoNotAvailable();
           }
         };
 
@@ -508,18 +450,7 @@ $("#random-btn").on("click", function() {
     console.log(title);
     console.log(directions);
     console.log(measuresArray);
-    $("#title").empty();
-    $("#ingredients-list").empty();
-    $("#directions").empty();
-    $("#cal").empty();
-    $("#fat").empty();
-    $("#satfat").empty();
-    $("#chol").empty();
-    $("#sodium").empty();
-    $("#carb").empty();
-    $("#fiber").empty();
-    $("#sugar").empty();
-    $("#protein").empty();
+    emptyInfo();
 
     for (i = 0; i < measuresArray.length; i++) {
       if (measuresArray[i] !== " " && measuresArray[i] !== "null null") {
@@ -571,77 +502,23 @@ $("#random-btn").on("click", function() {
         console.log(JSON.parse(xhr.responseText));
         var response = JSON.parse(xhr.responseText);
 
-        if (response.totalNutrients["ENERC_KCAL"]) {
-          $("#cal").text(
-            Math.round(response.totalNutrients["ENERC_KCAL"].quantity / 4) +
-              " kcal"
+        if (response.totalNutrients !== undefined) {
+          protein = printNutrients(
+            response.totalNutrients,
+            "PROCNT",
+            "protein"
           );
+          carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
+          fat = printNutrients(response.totalNutrients, "FAT", "fat");
+          printNutrients(response.totalNutrients, "FASAT", "satfat");
+          printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
+          printNutrients(response.totalNutrients, "CHOLE", "chol");
+          printNutrients(response.totalNutrients, "NA", "sodium");
+          printNutrients(response.totalNutrients, "FIBTG", "fiber");
+          printNutrients(response.totalNutrients, "SUGAR", "sugar");
+          makeChart();
         } else {
-          $("#cal").text("0 kcal");
-        }
-
-        if (response.totalNutrients.FAT) {
-          $("#fat").text(
-            Math.round(response.totalNutrients.FAT.quantity / 4) + " g"
-          );
-        } else {
-          $("#fat").text("0 g");
-        }
-
-        if (response.totalNutrients.FASAT) {
-          $("#satfat").text(
-            Math.round(response.totalNutrients.FASAT.quantity / 4) + " g"
-          );
-        } else {
-          $("#satfat").text("0 g");
-        }
-
-        if (response.totalNutrients.CHOLE) {
-          $("#chol").text(
-            Math.round(response.totalNutrients.CHOLE.quantity / 4) + " mg"
-          );
-        } else {
-          $("#chol").text("0 mg");
-        }
-
-        if (response.totalNutrients.NA) {
-          $("#sodium").text(
-            Math.round(response.totalNutrients.NA.quantity / 4) + " mg"
-          );
-        } else {
-          $("#sodium").text("0 mg");
-        }
-
-        if (response.totalNutrients.CHOCDF) {
-          $("#carb").text(
-            Math.round(response.totalNutrients.CHOCDF.quantity / 4) + " g"
-          );
-        } else {
-          $("#carb").text("0 g");
-        }
-
-        if (response.totalNutrients.FIBTG) {
-          $("#fiber").text(
-            Math.round(response.totalNutrients.FIBTG.quantity / 4) + " g"
-          );
-        } else {
-          $("#fiber").text("0 g");
-        }
-
-        if (response.totalNutrients.SUGAR) {
-          $("#sugar").text(
-            Math.round(response.totalNutrients.SUGAR.quantity / 4) + " g"
-          );
-        } else {
-          $("#sugar").text("0 g");
-        }
-
-        if (response.totalNutrients.PROCNT) {
-          $("#protein").text(
-            Math.round(response.totalNutrients.PROCNT.quantity / 4) + " g"
-          );
-        } else {
-          $("#protein").text("0 g");
+          infoNotAvailable();
         }
       };
 
