@@ -32,16 +32,16 @@ var infoNotAvailable = function() {
   $("#sugar").text("Not Available");
 };
 
-var printNutrients = function(nutrients, macro, id) {
+var printNutrients = function(nutrients, macro, id, unit) {
   var chartMacro = 0;
   if (nutrients[macro]) {
     if (macro === "PROCNT" || macro === "FAT" || macro === "CHOCDF") {
       chartMacro = Math.round(nutrients[macro].quantity / 4);
     }
-    $(`#${id}`).text(Math.round(nutrients[macro].quantity / 4) + " g");
+    $(`#${id}`).text(Math.round(nutrients[macro].quantity / 4) + unit);
     return chartMacro;
   } else {
-    $(`#${id}`).text("0 g");
+    $(`#${id}`).text("0" + unit);
   }
 };
 
@@ -203,16 +203,22 @@ $("#search-btn-ingredient").on("click", function() {
             protein = printNutrients(
               response.totalNutrients,
               "PROCNT",
-              "protein"
+              "protein",
+              " g"
             );
-            carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
-            fat = printNutrients(response.totalNutrients, "FAT", "fat");
-            printNutrients(response.totalNutrients, "FASAT", "satfat");
-            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
-            printNutrients(response.totalNutrients, "CHOLE", "chol");
-            printNutrients(response.totalNutrients, "NA", "sodium");
-            printNutrients(response.totalNutrients, "FIBTG", "fiber");
-            printNutrients(response.totalNutrients, "SUGAR", "sugar");
+            carbs = printNutrients(
+              response.totalNutrients,
+              "CHOCDF",
+              "carb",
+              " g"
+            );
+            fat = printNutrients(response.totalNutrients, "FAT", "fat", " g");
+            printNutrients(response.totalNutrients, "FASAT", "satfat", " g");
+            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal", "");
+            printNutrients(response.totalNutrients, "CHOLE", "chol", " mg");
+            printNutrients(response.totalNutrients, "NA", "sodium", " mg");
+            printNutrients(response.totalNutrients, "FIBTG", "fiber", " g");
+            printNutrients(response.totalNutrients, "SUGAR", "sugar", " g");
             makeChart();
           } else {
             infoNotAvailable();
@@ -369,16 +375,22 @@ $("#search-btn-category").on("click", function() {
             protein = printNutrients(
               response.totalNutrients,
               "PROCNT",
-              "protein"
+              "protein",
+              " g"
             );
-            carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
-            fat = printNutrients(response.totalNutrients, "FAT", "fat");
-            printNutrients(response.totalNutrients, "FASAT", "satfat");
-            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
-            printNutrients(response.totalNutrients, "CHOLE", "chol");
-            printNutrients(response.totalNutrients, "NA", "sodium");
-            printNutrients(response.totalNutrients, "FIBTG", "fiber");
-            printNutrients(response.totalNutrients, "SUGAR", "sugar");
+            carbs = printNutrients(
+              response.totalNutrients,
+              "CHOCDF",
+              "carb",
+              " g"
+            );
+            fat = printNutrients(response.totalNutrients, "FAT", "fat", " g");
+            printNutrients(response.totalNutrients, "FASAT", "satfat", " g");
+            printNutrients(response.totalNutrients, "ENERC_KCAL", "cal", "");
+            printNutrients(response.totalNutrients, "CHOLE", "chol", " mg");
+            printNutrients(response.totalNutrients, "NA", "sodium", " mg");
+            printNutrients(response.totalNutrients, "FIBTG", "fiber", " g");
+            printNutrients(response.totalNutrients, "SUGAR", "sugar", " g");
             makeChart();
           } else {
             infoNotAvailable();
@@ -506,16 +518,22 @@ $("#random-btn").on("click", function() {
           protein = printNutrients(
             response.totalNutrients,
             "PROCNT",
-            "protein"
+            "protein",
+            " g"
           );
-          carbs = printNutrients(response.totalNutrients, "CHOCDF", "carb");
-          fat = printNutrients(response.totalNutrients, "FAT", "fat");
-          printNutrients(response.totalNutrients, "FASAT", "satfat");
-          printNutrients(response.totalNutrients, "ENERC_KCAL", "cal");
-          printNutrients(response.totalNutrients, "CHOLE", "chol");
-          printNutrients(response.totalNutrients, "NA", "sodium");
-          printNutrients(response.totalNutrients, "FIBTG", "fiber");
-          printNutrients(response.totalNutrients, "SUGAR", "sugar");
+          carbs = printNutrients(
+            response.totalNutrients,
+            "CHOCDF",
+            "carb",
+            " g"
+          );
+          fat = printNutrients(response.totalNutrients, "FAT", "fat", " g");
+          printNutrients(response.totalNutrients, "FASAT", "satfat", " g");
+          printNutrients(response.totalNutrients, "ENERC_KCAL", "cal", "");
+          printNutrients(response.totalNutrients, "CHOLE", "chol", " mg");
+          printNutrients(response.totalNutrients, "NA", "sodium", " mg");
+          printNutrients(response.totalNutrients, "FIBTG", "fiber", " g");
+          printNutrients(response.totalNutrients, "SUGAR", "sugar", " g");
           makeChart();
         } else {
           infoNotAvailable();
